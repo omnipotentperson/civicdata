@@ -3,9 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missouri Civic Action Hub</title>
+    <title>Missouri Civic Action Hub | Find Your Reps</title>
+    <meta name="description" content="Quickly look up your local and state representatives in Missouri.">
+    <link rel="canonical" href="https://civicdata.homehosted.space">
+    <meta property="og:title" content="Missouri Civic Action Hub">
+    <meta property="og:description" content="Easily find your elected representatives.">
+    <meta property="og:url" content="https://civicdata.homehosted.space">
+    <meta property="og:type" content="website">
+    <meta name="google-site-verification" content="o2Ssp1UO_A2uDcrMowkgBvBhk4lh1epOE1R8hPHIOkE">
+
     <style>
-        /* CSS Variables for Easy Theming */
         :root {
             --primary: #2563eb;
             --bg: #f8fafc;
@@ -14,7 +21,6 @@
             --h1: #1e293b;
         }
 
-        /* Dark Mode Overrides */
         body.dark-mode {
             --primary: #60a5fa;
             --bg: #0f172a;
@@ -33,11 +39,11 @@
             margin: 0 auto;
         }
 
-        .controls { 
-            margin: 20px 0; 
-            background: var(--card); 
-            padding: 20px; 
-            border-radius: 12px; 
+        .controls {
+            margin: 20px 0;
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
             border: 1px solid #e2e8f0;
             display: flex;
             gap: 10px;
@@ -45,11 +51,13 @@
             align-items: center;
         }
 
+        /* CLS Fix: Min-height prevents footer jump */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 15px;
             margin-top: 20px;
+            min-height: 300px; 
         }
 
         .rep-card {
@@ -62,58 +70,52 @@
             font-size: 0.9em;
         }
 
-        .rep-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--primary);
-        }
-
         h1 { color: var(--h1); text-align: center; }
         a { color: var(--primary); text-decoration: none; font-weight: 600; }
-        a:hover { text-decoration: underline; }
-
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            font-size: 0.9em;
-            opacity: 0.7;
-        }
+        footer { text-align: center; margin-top: 50px; padding: 20px; font-size: 0.9em; opacity: 0.7; }
     </style>
 </head>
 <body>
 
-    <h1>Missouri Civic Action Hub</h1>
+    <header>
+        <h1>Missouri Civic Action Hub</h1>
+    </header>
 
-    <div class="controls">
-        <input type="text" id="search-box" placeholder="Search representatives...">
-        <select id="limit-select">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">All</option>
-        </select>
-        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    </div>
-    <div class="controls">
-        <input type="text" id="address-input" placeholder="Enter your full address..." style="width: 300px;">
-        <button onclick="findReps()">Find My Reps</button>
-    </div>
-    <div id="reps-results" class="grid-container"></div>
+    <main>
+        <section class="controls" aria-label="Search Controls">
+            <label for="search-box" style="display:none;">Search Representatives</label>
+            <input type="text" id="search-box" placeholder="Search representatives...">
+            
+            <label for="limit-select" style="display:none;">Limit Results</label>
+            <select id="limit-select">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">All</option>
+            </select>
+            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        </section>
 
-    <h2>Upcoming Bills</h2>
-    <div id="data-container" class="grid-container"></div>
+        <section class="controls" aria-label="Address Lookup">
+            <label for="address-input" style="display:none;">Enter Address</label>
+            <input type="text" id="address-input" placeholder="Enter your address...">
+            <button onclick="findReps()">Find My Reps</button>
+        </section>
 
-    <h2>Representatives</h2>
-    <div id="people-container" class="grid-container"></div>
+        <div id="reps-results" class="grid-container"></div>
+
+        <h2>Upcoming Bills</h2>
+        <div id="data-container" class="grid-container"></div>
+
+        <h2>Representatives</h2>
+        <div id="people-container" class="grid-container"></div>
+    </main>
 
     <footer>
-        <p>Civic Action Hub | 
-           <a href="https://cash.app/$toyz4me" target="_blank">Support the Creator</a>
-        </p>
+        <p>Civic Action Hub | <a href="https://cash.app/$toyz4me" target="_blank">Support</a></p>
     </footer>
 
     <script src="config.js"></script>
-
     <script>
         let allPeople = [];
 
@@ -137,10 +139,10 @@
                 const container = document.getElementById('data-container');
                 const masterList = data?.masterlist || {};
                 container.innerHTML = Object.values(masterList).slice(0, 10).map(bill => {
-                    const link = bill.url ? bill.url : `https://www.google.com/search?q=Missouri+bill+${bill.number}`;
+                    const link = bill.url ? bill.url : `https://www.google.com/search?q=${encodeURIComponent(bill.title)}`;
                     return `
                         <div class="rep-card">
-                            <h3><a href="${link}" target="_blank">${bill.number}</a></h3>
+                            <h3><a href="${link}" target="_blank">${bill.title.substring(0, 50)}...</a></h3>
                             <p>${bill.title}</p>
                         </div>
                     `;
@@ -175,14 +177,14 @@
                 const phone = social.capitol_phone;
                 const website = social.biography;
 
-                let phoneHtml = phone ? `<p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p>` : '';
-                let webHtml = website ? `<p><strong>Website:</strong> <a href="${website}" target="_blank">Site</a></p>` : '';
-                let fbHtml = fbLink ? `<p><strong>Facebook:</strong> <a href="${fbLink}" target="_blank">FB</a></p>` : '';
-                
+                let phoneHtml = phone ? `<p><strong>Phone:</strong> ${phone}</p>` : '';
+                let webHtml = website ? `<p><strong>Website:</strong> <a href="${website}" target="_blank">Link</a></p>` : '';
+                let fbHtml = fbLink ? `<p><strong>Facebook:</strong> <a href="${fbLink}" target="_blank">Page</a></p>` : '';
+
                 return `
                     <div class="rep-card">
                         <h3>${person.name}</h3>
-                        <p><strong>District:</strong> ${person.district || 'N/A'}</p>
+                        <p><strong>District:</strong> ${person.district}</p>
                         <p><strong>Party:</strong> ${person.party || 'N/A'}</p>
                         ${phoneHtml}
                         ${webHtml}
@@ -191,54 +193,49 @@
                 `;
             }).join('');
         }
-async function findReps() {
-    const address = document.getElementById('address-input').value;
-    const container = document.getElementById('reps-results');
 
-    if (!address) return alert("Please enter an address!");
-    container.innerHTML = "<p>Loading...</p>";
+        async function findReps() {
+            const address = document.getElementById('address-input').value;
+            const container = document.getElementById('reps-results');
 
-    try {
-        // 1. Convert address to coordinates (using Nominatim)
-        const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
-        const geoResponse = await fetch(geoUrl);
-        const geoData = await geoResponse.json();
+            if (!address) return alert("Please enter an address!");
+            container.innerHTML = "<p>Loading...</p>";
 
-        if (geoData.length === 0) {
-            container.innerHTML = "<p>Address not found.</p>";
-            return;
+            try {
+                const geoUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+                const geoResponse = await fetch(geoUrl);
+                const geoData = await geoResponse.json();
+
+                if (geoData.length === 0) {
+                    container.innerHTML = "<p>Address not found.</p>";
+                    return;
+                }
+
+                const lat = geoData[0].lat;
+                const lng = geoData[0].lon;
+
+                const url = `https://v3.openstates.org/people.geo?lat=${lat}&lng=${lng}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    container.innerHTML = `<p style="color:red">API Error.</p>`;
+                    return;
+                }
+
+                container.innerHTML = data.results.map(official => `
+                    <div class="rep-card">
+                        <h3>${official.name}</h3>
+                        <p><strong>Party:</strong> ${official.party}</p>
+                        <p><strong>District:</strong> ${official.district}</p>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error("Fetch Error:", err);
+                container.innerHTML = "<p>Failed to connect to API.</p>";
+            }
         }
-
-        // Extract coordinates (Note: Nominatim calls it 'lon')
-        const lat = geoData[0].lat;
-        const lng = geoData[0].lon; // Map 'lon' to 'lng' for OpenStates
-
-        // 2. Query Open States with the correct lat/lng
-        const url = `https://v3.openstates.org/people.geo?lat=${lat}&lng=${lng}&apikey=${OPENSTATES_API_KEY}`;
-
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("API Error:", data);
-            container.innerHTML = `<p style="color:red">API Error: Check Console</p>`;
-            return;
-        }
-
-        // 3. Render the results
-        container.innerHTML = data.results.map(official => `
-            <div class="rep-card">
-                <h3>${official.name}</h3>
-                <p><strong>Party:</strong> ${official.party}</p>
-                <p><strong>District:</strong> ${official.district}</p>
-            </div>
-        `).join('');
-
-    } catch (err) {
-        console.error("Fetch Error:", err);
-        container.innerHTML = "<p>Failed to connect to API.</p>";
-    }
-}
     </script>
 </body>
 </html>
