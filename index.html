@@ -21,6 +21,43 @@
             --h1: #1e293b;
         }
 
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Light Mode Colors */
+        .badge.state {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .badge.federal {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* Dark Mode Colors */
+        body.dark-mode .badge.state {
+            background-color: #064e3b;
+            color: #6ee7b7;
+            border: 1px solid #065f46;
+        }
+
+        body.dark-mode .badge.federal {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+            border: 1px solid #1e40af;
+        }
+
         body.dark-mode {
             --primary: #60a5fa;
             --bg: #0f172a;
@@ -194,7 +231,7 @@
             }).join('');
         }
 
-        async function findReps() {
+async function findReps() {
             const address = document.getElementById('address-input').value;
             const container = document.getElementById('reps-results');
 
@@ -202,7 +239,7 @@
             container.innerHTML = "<p>Loading...</p>";
 
             try {
-                const geoUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+                const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
                 const geoResponse = await fetch(geoUrl);
                 const geoData = await geoResponse.json();
 
@@ -215,7 +252,9 @@
                 const lng = geoData[0].lon;
 
                 const url = `https://v3.openstates.org/people.geo?lat=${lat}&lng=${lng}`;
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    headers: { 'X-API-KEY': OPENSTATES_API_KEY }
+                });
                 const data = await response.json();
 
                 if (!response.ok) {
@@ -223,13 +262,22 @@
                     return;
                 }
 
-                container.innerHTML = data.results.map(official => `
-                    <div class="rep-card">
-                        <h3>${official.name}</h3>
-                        <p><strong>Party:</strong> ${official.party}</p>
-                        <p><strong>District:</strong> ${official.district}</p>
-                    </div>
-                `).join('');
+                container.innerHTML = data.results.map(official => {
+                    // Logic to determine State vs Federal
+                    const jurName = official.jurisdiction?.name || "";
+                    const isFederal = jurName.toLowerCase().includes("united states");
+                    const levelLabel = isFederal ? "Federal" : "State";
+                    const levelClass = isFederal ? "federal" : "state";
+
+                    return `
+                        <div class="rep-card">
+                            <span class="badge ${levelClass}">${levelLabel}</span>
+                            <h3>${official.name}</h3>
+                            <p><strong>Party:</strong> ${official.party || 'N/A'}</p>
+                            <p><strong>Chamber:</strong> ${official.current_role?.org_classification || 'N/A'}</p>
+                        </div>
+                    `;
+                }).join('');
 
             } catch (err) {
                 console.error("Fetch Error:", err);
