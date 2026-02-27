@@ -94,6 +94,11 @@
         </select>
         <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
     </div>
+    <div class="controls">
+        <input type="text" id="address-input" placeholder="Enter your full address..." style="width: 300px;">
+        <button onclick="findReps()">Find My Reps</button>
+    </div>
+    <div id="reps-results" class="grid-container"></div>
 
     <h2>Upcoming Bills</h2>
     <div id="data-container" class="grid-container"></div>
@@ -106,6 +111,8 @@
            <a href="https://cash.app/$toyz4me" target="_blank">Support the Creator</a>
         </p>
     </footer>
+
+    <script src="config.js"></script>
 
     <script>
         let allPeople = [];
@@ -184,6 +191,54 @@
                 `;
             }).join('');
         }
+async function findReps() {
+    const address = document.getElementById('address-input').value;
+    const container = document.getElementById('reps-results');
+
+    if (!address) return alert("Please enter an address!");
+    container.innerHTML = "<p>Loading...</p>";
+
+    try {
+        // 1. Convert address to coordinates (using Nominatim)
+        const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+        const geoResponse = await fetch(geoUrl);
+        const geoData = await geoResponse.json();
+
+        if (geoData.length === 0) {
+            container.innerHTML = "<p>Address not found.</p>";
+            return;
+        }
+
+        // Extract coordinates (Note: Nominatim calls it 'lon')
+        const lat = geoData[0].lat;
+        const lng = geoData[0].lon; // Map 'lon' to 'lng' for OpenStates
+
+        // 2. Query Open States with the correct lat/lng
+        const url = `https://v3.openstates.org/people.geo?lat=${lat}&lng=${lng}&apikey=${OPENSTATES_API_KEY}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error("API Error:", data);
+            container.innerHTML = `<p style="color:red">API Error: Check Console</p>`;
+            return;
+        }
+
+        // 3. Render the results
+        container.innerHTML = data.results.map(official => `
+            <div class="rep-card">
+                <h3>${official.name}</h3>
+                <p><strong>Party:</strong> ${official.party}</p>
+                <p><strong>District:</strong> ${official.district}</p>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error("Fetch Error:", err);
+        container.innerHTML = "<p>Failed to connect to API.</p>";
+    }
+}
     </script>
 </body>
 </html>

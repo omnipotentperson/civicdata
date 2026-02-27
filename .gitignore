@@ -1,0 +1,19 @@
+# Secret files (Never commit these!)
+.env
+.env.local
+*.pem
+*.key
+
+# System junk
+.DS_Store
+Thumbs.db
+
+# VS Code or IDE workspace settings
+.vscode/
+.idea/
+
+# Logs and temp files
+*.log
+tmp/
+
+config.js
