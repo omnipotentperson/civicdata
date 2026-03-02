@@ -2,7 +2,6 @@ import requests
 import json
 import os
 
-# Your Configuration
 # IMPORTANT: Replace this placeholder with your actual LegiScan API key
 API_KEY = "USER-API-KEY"
 STATE = "MO"
