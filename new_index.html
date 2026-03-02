@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missouri Civic Action Hub | Find Your Reps</title>
+    <meta name="description" content="Quickly look up your local and state representatives in Missouri.">
+    <link rel="canonical" href="https://civicdata.homehosted.space">
+    <meta property="og:title" content="Missouri Civic Action Hub">
+    <meta property="og:description" content="Easily find your elected representatives.">
+    <meta property="og:url" content="https://civicdata.homehosted.space">
+    <meta property="og:type" content="website">
+    <meta name="google-site-verification" content="o2Ssp1UO_A2uDcrMowkgBvBhk4lh1epOE1R8hPHIOkE">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ─── Reset & Tokens ─────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary:       #1d4ed8;
+            --primary-light: #3b82f6;
+            --accent:        #f59e0b;
+            --bg:            #f0f4f8;
+            --surface:       #ffffff;
+            --surface-2:     #e8edf3;
+            --border:        #d1dbe8;
+            --text:          #2d3748;
+            --text-muted:    #64748b;
+            --h1:            #0f172a;
+            --success:       #166534;
+            --success-bg:    #dcfce7;
+            --success-border:#bbf7d0;
+            --federal:       #1e40af;
+            --federal-bg:    #dbeafe;
+            --federal-border:#bfdbfe;
+            --shadow-sm:     0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+            --shadow-md:     0 4px 12px rgba(0,0,0,.1);
+            --radius:        10px;
+            --transition:    0.2s ease;
+        }
+
+        body.dark {
+            --primary:       #60a5fa;
+            --primary-light: #93c5fd;
+            --accent:        #fbbf24;
+            --bg:            #0b1120;
+            --surface:       #1a2236;
+            --surface-2:     #0f172a;
+            --border:        #2d3f5c;
+            --text:          #e2e8f0;
+            --text-muted:    #94a3b8;
+            --h1:            #f8fafc;
+            --success:       #6ee7b7;
+            --success-bg:    #064e3b;
+            --success-border:#065f46;
+            --federal:       #93c5fd;
+            --federal-bg:    #1e3a8a;
+            --federal-border:#1e40af;
+            --shadow-sm:     0 1px 3px rgba(0,0,0,.3);
+            --shadow-md:     0 4px 12px rgba(0,0,0,.4);
+        }
+
+        /* ─── Visually Hidden (accessible labels) ────────────────── */
+        .sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ─── Base ───────────────────────────────────────────────── */
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background var(--transition), color var(--transition);
+            min-height: 100vh;
+        }
+
+        /* ─── Header ─────────────────────────────────────────────── */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 36px; height: 36px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--h1);
+            line-height: 1.2;
+        }
+
+        h1 span {
+            display: block;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ─── Dark Mode Toggle ───────────────────────────────────── */
+        .theme-btn {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all var(--transition);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .theme-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        .theme-icon { font-size: 1rem; }
+
+        /* ─── Main Content ───────────────────────────────────────── */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        /* ─── Control Panels ─────────────────────────────────────── */
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .panel-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .panel-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"], select {
+            flex: 1;
+            min-width: 160px;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            outline: none;
+        }
+
+        input[type="text"]:focus, select:focus {
+< truncated lines 211-575 >
+    function toggleDarkMode() {
+        applyTheme(!document.body.classList.contains('dark'));
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       Skeleton helpers
+    ═══════════════════════════════════════════════════════════════ */
+    function skeletonCards(n = 6) {
+        return Array.from({ length: n }, () => `
+            <li class="skeleton" aria-hidden="true">
+                <div class="skel-line" style="height:12px;width:55%"></div>
+                <div class="skel-line" style="height:18px;width:80%"></div>
+                <div class="skel-line" style="height:12px;width:65%"></div>
+                <div class="skel-line" style="height:12px;width:45%"></div>
+            </li>`).join('');
+    }
+
+    function emptyState(msg, isError = false) {
+        return `<li class="state-msg ${isError ? 'error' : ''}">
+                    <div class="icon">${isError ? '⚠️' : '📭'}</div>
+                    ${msg}
+                </li>`;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       Debounce
+    ═══════════════════════════════════════════════════════════════ */
+    function debounce(fn, delay) {
+        let timer;
+        return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       1. Bills
+    ═══════════════════════════════════════════════════════════════ */
+    dataContainer.innerHTML = skeletonCards(4);
+
+    fetch('./data.json')
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(data => {
+            const bills = Object.values(data?.masterlist || {});
+            if (!bills.length) {
+                dataContainer.innerHTML = emptyState('No bills found.');
+                return;
+            }
+            dataContainer.innerHTML = bills.slice(0, 10).map(bill => {
+                const title = bill.title || 'Untitled Bill';
+                const shortTitle = title.length > 60 ? title.substring(0, 57) + '…' : title;
+                const href = bill.url || `https://www.google.com/search?q=${encodeURIComponent(title)}`;
+                const status = bill.status || bill.last_action || '';
+                return `
+                    <li class="rep-card">
+                        <h3><a href="${href}" target="_blank" rel="noopener">${shortTitle}</a></h3>
+                        ${status ? `<p><strong>Status:</strong> ${status}</p>` : ''}
+                        <p><strong>ID:</strong> ${bill.bill_id || 'N/A'}</p>
+                    </li>`;
+            }).join('');
+        })
+        .catch(() => {
+            dataContainer.innerHTML = emptyState('Failed to load bills. Please try refreshing.', true);
+        });
+
+    /* ═══════════════════════════════════════════════════════════════
+       2. People
+    ═══════════════════════════════════════════════════════════════ */
+    peopleContainer.innerHTML = skeletonCards(6);
+
+    fetch('./enriched_people.json')
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(data => {
+            allPeople = Array.isArray(data) ? data : [];
+            renderPeople();
+            searchBox.addEventListener('input', debounce(renderPeople, 200));
+            limitSelect.addEventListener('change', renderPeople);
+        })
+        .catch(() => {
+            peopleContainer.innerHTML = emptyState('Failed to load representatives. Please try refreshing.', true);
+        });
+
+    function renderPeople() {
+        const term  = searchBox.value.toLowerCase().trim();
+        const limit = limitSelect.value;
+
+        const filtered = term
+            ? allPeople.filter(p => p.name?.toLowerCase().includes(term))
+            : allPeople;
+
+        const sliced = limit === 'all' ? filtered : filtered.slice(0, parseInt(limit, 10));
+
+        peopleCount.textContent = `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
+
+        if (!sliced.length) {
+            peopleContainer.innerHTML = emptyState(term ? `No representatives match "${term}".` : 'No representatives found.');
+            return;
+        }
+
+        peopleContainer.innerHTML = sliced.map(person => {
+            const bio    = person.bio    || {};
+            const social = bio.social    || {};
+            const links  = bio.links     || {};
+
+            const fbLink  = links.official?.facebook || links.personal?.facebook;
+            const phone   = social.capitol_phone;
+            const website = social.biography;
+
+            return `
+                <li class="rep-card">
+                    <h3>${escHtml(person.name || 'Unknown')}</h3>
+                    <p><strong>District:</strong> ${escHtml(String(person.district || 'N/A'))}</p>
+                    <p><strong>Party:</strong> ${escHtml(person.party || 'N/A')}</p>
+                    ${phone   ? `<p><strong>Phone:</strong> <a href="tel:${escHtml(phone)}">${escHtml(phone)}</a></p>` : ''}
+                    ${website ? `<p><strong>Website:</strong> <a href="${escHtml(website)}" target="_blank" rel="noopener">Official site</a></p>` : ''}
+                    ${fbLink  ? `<p><strong>Facebook:</strong> <a href="${escHtml(fbLink)}" target="_blank" rel="noopener">Facebook page</a></p>` : ''}
+                </li>`;
+        }).join('');
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       3. Find Reps by Address
+    ═══════════════════════════════════════════════════════════════ */
+    async function findReps() {
+        const address = addressInput.value.trim();
+
+        // Inline validation — no alert()
+        if (!address) {
+            addressError.classList.add('visible');
+            addressInput.focus();
+            return;
+        }
+        addressError.classList.remove('visible');
+
+        repsResultsWrap.hidden = false;
+        repsResults.innerHTML  = skeletonCards(3);
+        repsCount.textContent  = '';
+
+        try {
+            // Geocode
+            const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+            const geoRes  = await fetch(geoUrl);
+            const geoData = await geoRes.json();
+
+            if (!geoData.length) {
+                repsResults.innerHTML = emptyState('Address not found. Try a more specific address.');
+                return;
+            }
+
+            const { lat, lon: lng } = geoData[0];
+
+            // Route through local proxy — key never touches the browser
+            const url = `http://192.168.50.191:3005/api/reps?lat=${lat}&lng=${lng}`;
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                throw new Error(`API error ${res.status}`);
+            }
+
+            const data = await res.json();
+            const results = data.results || [];
+
+            if (!results.length) {
+                repsResults.innerHTML = emptyState('No representatives found for this address.');
+                return;
+            }
+
+            repsCount.textContent = `${results.length} found`;
+            repsResults.innerHTML = results.map(official => {
+                const jurName    = official.jurisdiction?.name || '';
+                const isFederal  = jurName.toLowerCase().includes('united states');
+                const levelLabel = isFederal ? 'Federal' : 'State';
+                const levelClass = isFederal ? 'federal' : 'state';
+                const chamber    = official.current_role?.org_classification || 'N/A';
+
+                return `
+                    <li class="rep-card">
+                        <span class="badge ${levelClass}">${levelLabel}</span>
+                        <h3>${escHtml(official.name || 'Unknown')}</h3>
+                        <p><strong>Party:</strong> ${escHtml(official.party || 'N/A')}</p>
+                        <p><strong>Chamber:</strong> ${escHtml(chamber)}</p>
+                        ${jurName ? `<p><strong>Jurisdiction:</strong> ${escHtml(jurName)}</p>` : ''}
+                    </li>`;
+            }).join('');
+
+        } catch (err) {
+            console.error('findReps error:', err);
+            repsResults.innerHTML = emptyState('Failed to connect to the API. Please try again.', true);
+        }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       XSS protection helper
+    ═══════════════════════════════════════════════════════════════ */
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g,'&amp;')
+            .replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;');
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       Init — apply saved theme
+    ═══════════════════════════════════════════════════════════════ */
+    applyTheme(localStorage.getItem('darkMode') === 'true');
+
+    // Allow pressing Enter in address field
+    addressInput.addEventListener('keydown', e => { if (e.key === 'Enter') findReps(); });
+    </script>
+</body>
+    </html>
