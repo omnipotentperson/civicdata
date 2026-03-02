@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
+        /* ─── Reset & Tokens ─────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -61,6 +62,7 @@
             --shadow-md:     0 4px 12px rgba(0,0,0,.4);
         }
 
+        /* ─── Visually Hidden (accessible labels) ────────────────── */
         .sr-only {
             position: absolute;
             width: 1px; height: 1px;
@@ -71,6 +73,7 @@
             border: 0;
         }
 
+        /* ─── Base ───────────────────────────────────────────────── */
         body {
             font-family: 'DM Sans', sans-serif;
             background: var(--bg);
@@ -79,6 +82,7 @@
             min-height: 100vh;
         }
 
+        /* ─── Header ─────────────────────────────────────────────── */
         header {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -99,7 +103,11 @@
             gap: 16px;
         }
 
-        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
         .logo-icon {
             width: 36px; height: 36px;
@@ -129,6 +137,7 @@
             text-transform: uppercase;
         }
 
+        /* ─── Dark Mode Toggle ───────────────────────────────────── */
         .theme-btn {
             background: var(--surface-2);
             border: 1px solid var(--border);
@@ -148,14 +157,17 @@
         }
 
         .theme-btn:hover { border-color: var(--primary); color: var(--primary); }
+
         .theme-icon { font-size: 1rem; }
 
+        /* ─── Main Content ───────────────────────────────────────── */
         main {
             max-width: 1200px;
             margin: 0 auto;
             padding: 32px 24px 64px;
         }
 
+        /* ─── Control Panels ─────────────────────────────────────── */
         .panel {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -214,10 +226,15 @@
             white-space: nowrap;
         }
 
-        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
         .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: var(--shadow-md); }
         .btn-primary:active { transform: translateY(0); }
 
+        /* ─── Section Headers ────────────────────────────────────── */
         .section-header {
             display: flex;
             align-items: baseline;
@@ -237,6 +254,7 @@
             font-weight: 500;
         }
 
+        /* ─── Grid ───────────────────────────────────────────────── */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -244,6 +262,7 @@
             min-height: 120px;
         }
 
+        /* ─── Cards ──────────────────────────────────────────────── */
         .rep-card {
             background: var(--surface);
             padding: 18px;
@@ -269,10 +288,32 @@
             margin-bottom: 2px;
         }
 
-        .rep-card p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
-        .rep-card p strong { color: var(--text); font-weight: 600; }
-        .rep-card a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .rep-card p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .rep-card p strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .rep-card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
         .rep-card a:hover { text-decoration: underline; }
+
+        /* ─── Badges ─────────────────────────────────────────────── */
+        .badge-row {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
 
         .badge {
             display: inline-block;
@@ -282,14 +323,38 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            margin-bottom: 8px;
+            margin-bottom: 0;
             border: 1px solid;
             width: fit-content;
         }
 
-        .badge.state { background: var(--success-bg); color: var(--success); border-color: var(--success-border); }
-        .badge.federal { background: var(--federal-bg); color: var(--federal); border-color: var(--federal-border); }
+        .badge.state {
+            background: var(--success-bg);
+            color: var(--success);
+            border-color: var(--success-border);
+        }
 
+        .badge.federal {
+            background: #ede9fe;
+            color: #5b21b6;
+            border-color: #ddd6fe;
+        }
+
+        body.dark .badge.federal {
+            background: #2e1065;
+            color: #c4b5fd;
+            border-color: #4c1d95;
+        }
+
+        .badge.democrat    { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+        .badge.republican  { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+        .badge.other-party { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+
+        body.dark .badge.democrat    { background: #1e3a8a; color: #93c5fd; border-color: #1e40af; }
+        body.dark .badge.republican  { background: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
+        body.dark .badge.other-party { background: #1e293b; color: #94a3b8; border-color: #334155; }
+
+        /* ─── Skeleton Loaders ───────────────────────────────────── */
         .skeleton {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -312,6 +377,7 @@
             100% { background-position: -200% 0; }
         }
 
+        /* ─── Empty / Error States ───────────────────────────────── */
         .state-msg {
             grid-column: 1 / -1;
             text-align: center;
@@ -323,6 +389,7 @@
         .state-msg .icon { font-size: 2rem; margin-bottom: 10px; }
         .state-msg.error { color: #dc2626; }
 
+        /* ─── Inline validation ───────────────────────────────────── */
         .field-error {
             font-size: 0.8rem;
             color: #dc2626;
@@ -332,6 +399,7 @@
 
         .field-error.visible { display: block; }
 
+        /* ─── Footer ─────────────────────────────────────────────── */
         footer {
             text-align: center;
             padding: 28px 20px;
@@ -344,6 +412,7 @@
         footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
         footer a:hover { text-decoration: underline; }
 
+        /* ─── Responsive ─────────────────────────────────────────── */
         @media (max-width: 600px) {
             main { padding: 20px 16px 48px; }
             .header-inner { height: auto; padding: 12px 0; flex-wrap: wrap; }
@@ -353,6 +422,7 @@
 </head>
 <body>
 
+    <!-- ── Header ──────────────────────────────────────────────── -->
     <header>
         <div class="header-inner">
             <div class="logo">
@@ -362,7 +432,12 @@
                     <span>Find your representatives</span>
                 </h1>
             </div>
-            <button class="theme-btn" id="theme-btn" onclick="toggleDarkMode()" aria-pressed="false" aria-label="Toggle dark mode">
+            <button
+                class="theme-btn"
+                id="theme-btn"
+                onclick="toggleDarkMode()"
+                aria-pressed="false"
+                aria-label="Toggle dark mode">
                 <span class="theme-icon" id="theme-icon">🌙</span>
                 <span id="theme-label">Dark mode</span>
             </button>
@@ -371,11 +446,18 @@
 
     <main>
 
+        <!-- ── Browse controls ─────────────────────────────────── -->
         <div class="panel" role="search" aria-label="Browse representatives">
             <div class="panel-label">Browse All Representatives</div>
             <div class="panel-row">
                 <label class="sr-only" for="search-box">Search representatives by name</label>
-                <input type="text" id="search-box" placeholder="Search by name…" autocomplete="off" aria-controls="people-container">
+                <input
+                    type="text"
+                    id="search-box"
+                    placeholder="Search by name…"
+                    autocomplete="off"
+                    aria-controls="people-container">
+
                 <label class="sr-only" for="limit-select">Number of results to show</label>
                 <select id="limit-select" aria-label="Number of results">
                     <option value="10">Show 10</option>
@@ -386,16 +468,22 @@
             </div>
         </div>
 
+        <!-- ── Address lookup ──────────────────────────────────── -->
         <div class="panel" aria-label="Address-based lookup">
             <div class="panel-label">Find My Representatives by Address</div>
             <div class="panel-row">
                 <label class="sr-only" for="address-input">Enter your street address</label>
-                <input type="text" id="address-input" placeholder="Enter your address…" autocomplete="street-address">
+                <input
+                    type="text"
+                    id="address-input"
+                    placeholder="Enter your address…"
+                    autocomplete="street-address">
                 <button class="btn btn-primary" onclick="findReps()">🔍 Find My Reps</button>
             </div>
             <div class="field-error" id="address-error" role="alert">Please enter an address first.</div>
         </div>
 
+        <!-- ── Address results ─────────────────────────────────── -->
         <div id="reps-results-wrap" hidden>
             <div class="section-header">
                 <h2>Your Representatives</h2>
@@ -404,16 +492,20 @@
             <ul class="grid-container" id="reps-results" aria-label="Representatives for your address" aria-live="polite"></ul>
         </div>
 
+        <!-- ── Bills ───────────────────────────────────────────── -->
         <div class="section-header">
             <h2>Upcoming Bills</h2>
         </div>
-        <ul class="grid-container" id="data-container" aria-label="Upcoming bills" aria-live="polite"></ul>
+        <ul class="grid-container" id="data-container" aria-label="Upcoming bills" aria-live="polite">
+        </ul>
 
+        <!-- ── All reps ─────────────────────────────────────────── -->
         <div class="section-header">
             <h2>Representatives</h2>
             <span class="section-count" id="people-count"></span>
         </div>
-        <ul class="grid-container" id="people-container" aria-label="All representatives" aria-live="polite"></ul>
+        <ul class="grid-container" id="people-container" aria-label="All representatives" aria-live="polite">
+        </ul>
 
     </main>
 
@@ -421,25 +513,33 @@
         <p>Civic Action Hub &nbsp;·&nbsp; <a href="https://cash.app/$toyz4me" target="_blank" rel="noopener">Support this project</a></p>
     </footer>
 
+    <!-- ── API key handled by local proxy at 192.168.50.191:3005 ─ -->
     <script>
     'use strict';
 
+    /* ═══════════════════════════════════════════════════════════════
+       State
+    ═══════════════════════════════════════════════════════════════ */
     let allPeople = [];
 
-    const searchBox       = document.getElementById('search-box');
-    const limitSelect     = document.getElementById('limit-select');
+    // Cache DOM refs (queried once, not on every render)
+    const searchBox      = document.getElementById('search-box');
+    const limitSelect    = document.getElementById('limit-select');
     const peopleContainer = document.getElementById('people-container');
-    const peopleCount     = document.getElementById('people-count');
-    const dataContainer   = document.getElementById('data-container');
-    const repsResults     = document.getElementById('reps-results');
+    const peopleCount    = document.getElementById('people-count');
+    const dataContainer  = document.getElementById('data-container');
+    const repsResults    = document.getElementById('reps-results');
     const repsResultsWrap = document.getElementById('reps-results-wrap');
-    const repsCount       = document.getElementById('reps-count');
-    const addressInput    = document.getElementById('address-input');
-    const addressError    = document.getElementById('address-error');
-    const themeBtn        = document.getElementById('theme-btn');
-    const themeIcon       = document.getElementById('theme-icon');
-    const themeLabel      = document.getElementById('theme-label');
+    const repsCount      = document.getElementById('reps-count');
+    const addressInput   = document.getElementById('address-input');
+    const addressError   = document.getElementById('address-error');
+    const themeBtn       = document.getElementById('theme-btn');
+    const themeIcon      = document.getElementById('theme-icon');
+    const themeLabel     = document.getElementById('theme-label');
 
+    /* ═══════════════════════════════════════════════════════════════
+       Dark Mode
+    ═══════════════════════════════════════════════════════════════ */
     function applyTheme(dark) {
         document.body.classList.toggle('dark', dark);
         themeIcon.textContent  = dark ? '☀️' : '🌙';
@@ -452,6 +552,9 @@
         applyTheme(!document.body.classList.contains('dark'));
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       Skeleton helpers
+    ═══════════════════════════════════════════════════════════════ */
     function skeletonCards(n = 6) {
         return Array.from({ length: n }, () => `
             <li class="skeleton" aria-hidden="true">
@@ -469,18 +572,27 @@
                 </li>`;
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       Debounce
+    ═══════════════════════════════════════════════════════════════ */
     function debounce(fn, delay) {
         let timer;
         return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), delay); };
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       1. Bills
+    ═══════════════════════════════════════════════════════════════ */
     dataContainer.innerHTML = skeletonCards(4);
 
     fetch('./data.json')
         .then(r => r.ok ? r.json() : Promise.reject(r.status))
         .then(data => {
             const bills = Object.values(data?.masterlist || {});
-            if (!bills.length) { dataContainer.innerHTML = emptyState('No bills found.'); return; }
+            if (!bills.length) {
+                dataContainer.innerHTML = emptyState('No bills found.');
+                return;
+            }
             dataContainer.innerHTML = bills.slice(0, 10).map(bill => {
                 const title = bill.title || 'Untitled Bill';
                 const shortTitle = title.length > 60 ? title.substring(0, 57) + '…' : title;
@@ -494,8 +606,13 @@
                     </li>`;
             }).join('');
         })
-        .catch(() => { dataContainer.innerHTML = emptyState('Failed to load bills. Please try refreshing.', true); });
+        .catch(() => {
+            dataContainer.innerHTML = emptyState('Failed to load bills. Please try refreshing.', true);
+        });
 
+    /* ═══════════════════════════════════════════════════════════════
+       2. People
+    ═══════════════════════════════════════════════════════════════ */
     peopleContainer.innerHTML = skeletonCards(6);
 
     fetch('./enriched_people.json')
@@ -506,30 +623,60 @@
             searchBox.addEventListener('input', debounce(renderPeople, 200));
             limitSelect.addEventListener('change', renderPeople);
         })
-        .catch(() => { peopleContainer.innerHTML = emptyState('Failed to load representatives. Please try refreshing.', true); });
+        .catch(() => {
+            peopleContainer.innerHTML = emptyState('Failed to load representatives. Please try refreshing.', true);
+        });
 
     function renderPeople() {
         const term  = searchBox.value.toLowerCase().trim();
         const limit = limitSelect.value;
-        const filtered = term ? allPeople.filter(p => p.name?.toLowerCase().includes(term)) : allPeople;
+
+        const filtered = term
+            ? allPeople.filter(p => p.name?.toLowerCase().includes(term))
+            : allPeople;
+
         const sliced = limit === 'all' ? filtered : filtered.slice(0, parseInt(limit, 10));
+
         peopleCount.textContent = `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
+
         if (!sliced.length) {
             peopleContainer.innerHTML = emptyState(term ? `No representatives match "${term}".` : 'No representatives found.');
             return;
         }
+
         peopleContainer.innerHTML = sliced.map(person => {
             const bio    = person.bio    || {};
             const social = bio.social    || {};
             const links  = bio.links     || {};
+
             const fbLink  = links.official?.facebook || links.personal?.facebook;
             const phone   = social.capitol_phone;
             const website = social.biography;
+
+            const partyRaw   = (person.party || '').toLowerCase();
+            const partyClass = partyRaw.includes('democrat') ? 'democrat'
+                             : partyRaw.includes('republican') ? 'republican'
+                             : 'other-party';
+            const partyLabel = person.party || 'Unknown Party';
+
+            const jurName   = person.jurisdiction?.name || person.jurisdiction || '';
+            const isFederal = String(jurName).toLowerCase().includes('united states');
+            const levelLabel = isFederal ? 'Federal' : 'State';
+            const levelClass = isFederal ? 'federal' : 'state';
+
+            const endYear = person.current_role?.end_date
+                ? new Date(person.current_role.end_date).getFullYear()
+                : null;
+
             return `
                 <li class="rep-card">
+                    <div class="badge-row">
+                        <span class="badge ${levelClass}">${levelLabel}</span>
+                        <span class="badge ${partyClass}">${escHtml(partyLabel)}</span>
+                    </div>
                     <h3>${escHtml(person.name || 'Unknown')}</h3>
                     <p><strong>District:</strong> ${escHtml(String(person.district || 'N/A'))}</p>
-                    <p><strong>Party:</strong> ${escHtml(person.party || 'N/A')}</p>
+                    ${endYear ? `<p><strong>Up for reelection:</strong> ${endYear}</p>` : ''}
                     ${phone   ? `<p><strong>Phone:</strong> <a href="tel:${escHtml(phone)}">${escHtml(phone)}</a></p>` : ''}
                     ${website ? `<p><strong>Website:</strong> <a href="${escHtml(website)}" target="_blank" rel="noopener">Official site</a></p>` : ''}
                     ${fbLink  ? `<p><strong>Facebook:</strong> <a href="${escHtml(fbLink)}" target="_blank" rel="noopener">Facebook page</a></p>` : ''}
@@ -537,35 +684,52 @@
         }).join('');
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       3. Find Reps by Address
+    ═══════════════════════════════════════════════════════════════ */
     async function findReps() {
         const address = addressInput.value.trim();
+
+        // Inline validation — no alert()
         if (!address) {
             addressError.classList.add('visible');
             addressInput.focus();
             return;
         }
         addressError.classList.remove('visible');
+
         repsResultsWrap.hidden = false;
         repsResults.innerHTML  = skeletonCards(3);
         repsCount.textContent  = '';
+
         try {
-            const geoUrl  = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
-            const geoRes  = await fetch(geoUrl);
+            // Geocode via proxy (uses GOOGLE_API_KEY server-side)
+            const geoRes  = await fetch(`http://192.168.50.191:3005/api/geocode?address=${encodeURIComponent(address)}`);
             const geoData = await geoRes.json();
-            if (!geoData.length) {
+
+            if (!geoData.lat || !geoData.lng) {
                 repsResults.innerHTML = emptyState('Address not found. Try a more specific address.');
                 return;
             }
-            const { lat, lon: lng } = geoData[0];
+
+            const { lat, lng } = geoData;
+
+            // Route through local proxy — key never touches the browser
             const url = `http://192.168.50.191:3005/api/reps?lat=${lat}&lng=${lng}`;
             const res = await fetch(url);
-            if (!res.ok) throw new Error(`API error ${res.status}`);
-            const data    = await res.json();
+
+            if (!res.ok) {
+                throw new Error(`API error ${res.status}`);
+            }
+
+            const data = await res.json();
             const results = data.results || [];
+
             if (!results.length) {
                 repsResults.innerHTML = emptyState('No representatives found for this address.');
                 return;
             }
+
             repsCount.textContent = `${results.length} found`;
             repsResults.innerHTML = results.map(official => {
                 const jurName    = official.jurisdiction?.name || '';
@@ -573,21 +737,39 @@
                 const levelLabel = isFederal ? 'Federal' : 'State';
                 const levelClass = isFederal ? 'federal' : 'state';
                 const chamber    = official.current_role?.org_classification || 'N/A';
+
+                const partyRaw   = (official.party || '').toLowerCase();
+                const partyClass = partyRaw.includes('democrat') ? 'democrat'
+                                 : partyRaw.includes('republican') ? 'republican'
+                                 : 'other-party';
+                const partyLabel = official.party || 'Unknown Party';
+
+                const endYear = official.current_role?.end_date
+                    ? new Date(official.current_role.end_date).getFullYear()
+                    : null;
+
                 return `
                     <li class="rep-card">
-                        <span class="badge ${levelClass}">${levelLabel}</span>
+                        <div class="badge-row">
+                            <span class="badge ${levelClass}">${levelLabel}</span>
+                            <span class="badge ${partyClass}">${escHtml(partyLabel)}</span>
+                        </div>
                         <h3>${escHtml(official.name || 'Unknown')}</h3>
-                        <p><strong>Party:</strong> ${escHtml(official.party || 'N/A')}</p>
                         <p><strong>Chamber:</strong> ${escHtml(chamber)}</p>
                         ${jurName ? `<p><strong>Jurisdiction:</strong> ${escHtml(jurName)}</p>` : ''}
+                        ${endYear ? `<p><strong>Up for reelection:</strong> ${endYear}</p>` : ''}
                     </li>`;
             }).join('');
+
         } catch (err) {
             console.error('findReps error:', err);
             repsResults.innerHTML = emptyState('Failed to connect to the API. Please try again.', true);
         }
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       XSS protection helper
+    ═══════════════════════════════════════════════════════════════ */
     function escHtml(str) {
         return String(str)
             .replace(/&/g,'&amp;')
@@ -596,7 +778,12 @@
             .replace(/"/g,'&quot;');
     }
 
+    /* ═══════════════════════════════════════════════════════════════
+       Init — apply saved theme
+    ═══════════════════════════════════════════════════════════════ */
     applyTheme(localStorage.getItem('darkMode') === 'true');
+
+    // Allow pressing Enter in address field
     addressInput.addEventListener('keydown', e => { if (e.key === 'Enter') findReps(); });
     </script>
 </body>
