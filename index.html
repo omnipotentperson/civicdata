@@ -707,12 +707,12 @@
             const geoRes  = await fetch(`http://192.168.50.191:3005/api/geocode?address=${encodeURIComponent(address)}`);
             const geoData = await geoRes.json();
 
-            if (!geoData.lat || !geoData.lng) {
+            if (!geoData.results || !geoData.results.length || geoData.status !== 'OK') {
                 repsResults.innerHTML = emptyState('Address not found. Try a more specific address.');
                 return;
             }
 
-            const { lat, lng } = geoData;
+            const { lat, lng } = geoData.results[0].geometry.location;
 
             // Route through local proxy — key never touches the browser
             const url = `http://192.168.50.191:3005/api/reps?lat=${lat}&lng=${lng}`;
